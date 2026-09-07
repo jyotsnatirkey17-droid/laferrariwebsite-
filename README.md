@@ -331,8 +331,8 @@
             <h3>Visionary Architects</h3>
             <h2>Created & Engineered By</h2>
             <div class="founders-grid">
-                <div class="founder-card"><h4>Enrique Tirkey</h4><p>Founder</p></div>
-                <div class="founder-card"><h4>Debdwij Sarkar</h4><p>Founder</p></div>
+                <div class="founder-card"><h4>Enrique Tirkey</h4><p>Co-Founder</p></div>
+                <div class="founder-card"><h4>Debdwij Sarkar</h4><p>Co-Founder</p></div>
                 <div class="founder-card"><h4>Saket Roy</h4><p>Co-Founder</p></div>
                 <div class="founder-card"><h4>Samrat Mukherjee</h4><p>Co-Founder</p></div>
             </div>
@@ -345,3 +345,5 @@
 
 </body>
 </html>
+
+
