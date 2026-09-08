@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Hypercar & Supercar Archive (2000–Present)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --red: #ff1801;
+            --bg: #050505;
+            --surface: rgba(12, 12, 12, 0.94);
+            --border: rgba(255, 24, 1, 0.3);
+            --text: #ededed;
+            --muted: #aaaaaa;
+        }
+        body { background-color: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
+
+        .brand-nav {
+            position: fixed; top: 0; left: 0; width: 100%;
+            background: rgba(5, 5, 5, 0.95); border-bottom: 1px solid var(--border);
+            display: flex; justify-content: center; gap: 4px; padding: 12px 6px; z-index: 1000; flex-wrap: wrap; backdrop-filter: blur(10px);
+        }
+        .brand-tab {
+            background: transparent; border: 1px solid var(--border); color: var(--muted);
+            padding: 5px 8px; font-family: 'Syncopate', sans-serif; font-size: 0.5rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease;
+        }
+        .brand-tab.active, .brand-tab:hover { background: var(--red); color: #fff; border-color: var(--red); box-shadow: 0 0 12px rgba(255, 24, 1, 0.5); }
+
+        header {
+            position: relative; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px;
+            background-size: cover; background-position: center; transition: background 0.5s ease;
+        }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(5,5,5,0.4), rgba(5,5,5,0.92)); z-index: 1; }
+        .hero-content { position: relative; z-index: 3; }
+        .top-brand { font-family: 'Syncopate', sans-serif; font-size: clamp(0.9rem, 2vw, 1.3rem); font-weight: 700; letter-spacing: 5px; color: #fff; margin-bottom: 20px; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+        .top-brand span { color: var(--red); }
+        h1 { font-family: 'Syncopate', sans-serif; font-size: clamp(2.2rem, 5.5vw, 4.5rem); font-weight: 700; letter-spacing: 4px; margin-bottom: 15px; color: #fff; text-shadow: 0 0 30px rgba(255, 24, 1, 0.7); }
+        p.subtitle { font-size: clamp(0.75rem, 1.5vw, 1rem); color: #ff4d4d; max-width: 700px; margin-bottom: 35px; text-transform: uppercase; letter-spacing: 3px; font-weight: 700; text-shadow: 0 2px 8px rgba(0,0,0,0.9); }
+
+        .content-section { padding: 150px 20px 80px; max-width: 1200px; margin: 0 auto; display: none; }
+        .content-section.active { display: block; }
+        .section-title { font-family: 'Syncopate', sans-serif; font-size: clamp(1.5rem, 3.2vw, 2.2rem); text-align: center; margin-bottom: 40px; color: var(--red); letter-spacing: 2px; }
+
+        .model-block { background: var(--surface); border: 1px solid var(--border); margin-bottom: 80px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.85); }
+        .model-image-container { width: 100%; height: 420px; background-size: cover; background-position: center; position: relative; }
+        .model-image-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(12,12,12,0.05), var(--surface)); }
+        
+        .model-content-padding { padding: 40px; }
+        .model-title { font-family: 'Syncopate', sans-serif; font-size: 2rem; color: #fff; margin-bottom: 10px; border-left: 4px solid var(--red); padding-left: 15px; }
+        .model-desc { color: var(--muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 30px; font-weight: 300; }
+
+        .grid-heading { font-family: 'Syncopate', sans-serif; font-size: 0.85rem; color: #fff; letter-spacing: 2px; margin-bottom: 15px; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
+        
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 35px; }
+        .metric-card { background: rgba(0, 0, 0, 0.6); border: 1px solid var(--border); padding: 20px 15px; text-align: center; transition: transform 0.3s ease; }
+        .metric-card:hover { transform: translateY(-3px); border-color: #fff; }
+        .metric-card h3 { font-family: 'Syncopate', sans-serif; font-size: 1.8rem; color: var(--red); margin-bottom: 6px; }
+        .metric-card p { color: var(--muted); text-transform: uppercase; font-size: 0.7rem; font-weight: 600; letter-spacing: 1px; }
+
+        .specs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .spec-item { background: rgba(0, 0, 0, 0.45); border: 1px solid var(--border); padding: 15px 18px; display: flex; justify-content: space-between; align-items: center; }
+        .spec-item span:first-child { color: var(--muted); font-size: 0.78rem; font-weight: 600; text-transform: uppercase; }
+        .spec-item span:last-child { color: #fff; font-family: 'Syncopate', sans-serif; font-size: 0.8rem; text-align: right; }
+
+        footer { text-align: center; padding: 40px 20px; color: #888; font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.05); background: #020202; }
+        footer span { color: var(--red); font-weight: 600; }
+    </style>
+</head>
+<body>
+
+    <nav class="brand-nav">
+        <button class="brand-tab active" onclick="switchBrand('ferrari', event)">Ferrari</button>
+        <button class="brand-tab" onclick="switchBrand('nissan', event)">Nissan</button>
+        <button class="brand-tab" onclick="switchBrand('lamborghini', event)">Lamborghini</button>
+        <button class="brand-tab" onclick="switchBrand('mclaren', event)">McLaren</button>
+        <button class="brand-tab" onclick="switchBrand('bugatti', event)">Bugatti</button>
+        <button class="brand-tab" onclick="switchBrand('supra', event)">Supra</button>
+        <button class="brand-tab" onclick="switchBrand('porsche', event)">Porsche</button>
+        <button class="brand-tab" onclick="switchBrand('bmw-hybrid', event)">BMW V8 Hybrid</button>
+        <button class="brand-tab" onclick="switchBrand('mercedes-hybrid', event)">Mercedes F1 V12</button>
+    </nav>
+
+    <!-- Hero Header -->
+    <header id="hero-bg" style="background-image: url('https://iili.io/n3Jzpqv.jpg');">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="top-brand" id="hero-tagline">SCUDERIA <span>FERRARI ARCHIVE</span></div>
+            <p class="subtitle" id="hero-subtitle">THE ULTIMATE FLAGSHIP MODELS &amp; FASTEST WEAPONS</p>
+            <h1 id="hero-title">FERRARI LEGACY</h1>
+        </div>
+    </header>
+
+    <!-- FERRARI -->
+    <section class="content-section active" id="sec-ferrari">
+        <h2 class="section-title">Ferrari Absolute Flagship Hypercar</h2>
+        <div class="model-block">
+            <div class="model-image-container" style="background-image: url('https://iili.io/n3Jzpqv.jpg');"><div class="model-image-overlay"></div></div>
+            <div class="model-content-padding">
+                <h3 class="model-title">LaFerrari</h3>
+                <p class="model-desc">Maranello’s first-ever mild hybrid masterpiece, combining F1-derived HY-KERS technology with a roaring naturally aspirated V12 engine.</p>
+                
+                <div class="grid-heading">Core Performance Metrics</div>
+                <div class="metrics-grid">
+                    <div class="metric-card"><h3>950 HP</h3><p>Combined Output</p></div>
+                    <div class="metric-card"><h3>2.4S</h3><p>0-60 MPH</p></div>
+                    <div class="metric-card"><h3>217 MPH</h3><p>Top Speed</p></div>
+                    <div class="metric-card"><h3>9.8S</h3><p>1/4 Mile Time</p></div>
+                </div>
+
+                <div class="grid-heading">Technical Specifications</div>
+                <div class="specs-grid">
+                    <div class="spec-item"><span>Engine Layout</span><span>6.3L Naturally Aspirated V12</span></div>
+                    <div class="spec-item"><span>Electric Motor</span><span>HY-KERS Permanent Magnet</span></div>
+                    <div class="spec-item"><span>Transmission</span><span>7-Speed Dual-Clutch DCT</span></div>
+                    <div class="spec-item"><span>Chassis Material</span><span>T800 / M46J Carbon Fiber</span></div>
+                    <div class="spec-item"><span>Curb Weight</span><span>1,585 kg (3,494 lbs)</span></div>
+                    <div class="spec-item"><span>Production Limit</span><span>499 Units Worldwide</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NISSAN -->
+    <section class="content-section" id="sec-nissan">
+        <h2 class="section-title">Nissan JDM Tuner Apex Legend</h2>
+        <div class="model-block">
+            <div class="model-image-container" style="background-image: url('https://iili.io/n3Jztzg.jpg');"><div class="model-image-overlay"></div></div>
+            <div class="model-content-padding">
+                <h3 class="model-title">Nissan GT-R R35 Custom Widebody</h3>
+                <p class="model-desc">An aggressive, heavily customized powerhouse known worldwide as 'Godzilla' with widebody aerodynamics and extreme turbo tuning.</p>
+                
+                <div class="grid-heading">Core Performance Metrics</div>
+                <div class="metrics-grid">
+                    <div class="metric-card"><h3>1,350 HP</h3><p>Tuned Output</p></div>
+                    <div class="metric-card"><h3>2.0S</h3><p>0-60 MPH (Est.)</p></div>
+                    <div class="metric-card"><h3>225+ MPH</h3><p>Top Speed</p></div>
+                    <div class="metric-card"><h3>8.9S</h3><p>1/4 Mile Time</p></div>
+                </div>
+
+                <div class="grid-heading">Technical Specifications</div>
+                <div class="specs-grid">
+                    <div class="spec-item"><span>Engine Layout</span><span>3.8L Twin-Turbocharged V6 (VR38)</span></div>
+                    <div class="spec-item"><span>Turbochargers</span><span>Custom Upgraded Big-Boost Units</span></div>
+                    <div class="spec-item"><span>Drivetrain</span><span>ATTESA E-TS All-Wheel Drive (AWD)</span></div>
+                    <div class="spec-item"><span>Aero Kit</span><span>Custom Carbon Fiber Widebody</span></div>
+                    <div class="spec-item"><span>Suspension</span><span>Fully Adjustable Track Coilovers</span></div>
+                    <div class="spec-item"><span>Braking System</span><span>Carbon-Ceramic Custom Big Brakes</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LAMBORGHINI -->
+    <section class="content-section" id="sec-lamborghini">
+        <h2 class="section-title">Lamborghini V12 High-Performance Hybrid</h2>
+        <div class="model-block">
+            <div class="model-image-container" style="background-image: url('https://iili.io/n3JI2et.jpg');"><div class="model-image-overlay"></div></div>
+            <div class="model-content-padding">
+                <h3 class="model-title">Lamborghini Revuelto</h3>
+                <p class="model-desc">The flagship V12 HPEV supersports car redefining Sant'Agata Bolognese’s lineage with tri-motor electric torque vectoring.</p>
+                
+                <div class="grid-heading">Core Performance Metrics</div>
+                <div class="metrics-grid">
+                    <div class="metric-card"><h3>1,001 HP</h3><p>Combined Output</p></div>
+                    <div class="metric-card"><h3>2.3S</h3><p>0-60 MPH</p></div>
+                    <div class="metric-card"><h3>217 MPH</h3><p>Top Speed</p></div>
+                    <div class="metric-card"><h3>9.7S</h3><p>1/4 Mile Time</p></div>
+                </div>
+
+                <div class="grid-heading">Technical Specifications</div>
+                <div class="specs-grid">
+                    <div class="spec-item"><span>Engine Layout</span><span>6.5L V12 + 3 Electric Motors</span></div>
+                    <div class="spec-item"><span>Transmission</span><span>8-Speed Transverse Dual-Clutch</span></div>
+                    <div class="spec-item"><span>Chassis</span><span>Aeronautics-Inspired Monofuselage</span></div>
+                    <div class="spec-item"><span>Battery Capacity</span><span>3.8 kWh Lithium-ion Pack</span></div>
+                    <div class="spec-item"><span>Downforce Index</span><span>+61% vs Aventador Ultimae</span></div>
+                    <div class="spec-item"><span>Dry Weight</span><span>1,772 kg (3,906 lbs)</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MCLAREN -->
+    <section class="content-section" id="sec-mclaren">
+        <h2 class="section-title">McLaren Ultimate Series Grand Tourer</h2>
+        <div class="model-block">
+            <div class="model-image-container" style="background-image: url('https://iili.io/n3JzUsj.jpg');"><div class="model-image-overlay"></div></div>
+            <div class="model-content-padding">
+                <h3 class="model-title">McLaren Speedtail</h3>
+                <p class="model-desc">A seamless teardrop-shaped hyper-GT engineered for unmatched high-speed aerodynamic efficiency and central driving layout.</p>
+                
+                <div class="grid-heading">Core Performance Metrics</div>
+                <div class="metrics-grid">
+                    <div class="metric-card"><h3>1,035 HP</h3><p>Combined Output</p></div>
+                    <div class="metric-card"><h3>2.9S</h3><p>0-60 MPH</p></div>
+                    <div class="metric-card"><h3>250 MPH</h3><p>Top Speed</p></div>
+                    <div class="metric-card"><h3>12.8S</h3><p>0-186 MPH (300 km/h)</p></div>
+                </div>
+
+                <div class="grid-heading">Technical Specifications</div>
+                <div class="specs-grid">
+                    <div class="spec-item"><span>Engine Layout</span><span>4.0L Twin-Turbo V8 + Hybrid</span></div>
+                    <div class="spec-item"><span>Cabin Layout</span><span>Central Driving Position (3 Seats)</span></div>
+                    <div class="spec-item"><span>Body Shell</span><span>Full Carbon Fiber Teardrop Aero</span></div>
+                    <div class="spec-item"><span>Steering Wheels</span><span>Aero-optimized Static Ailerons</span></div>
+                    <div class="spec-item"><span>Dry Weight</span><span>1,430 kg (3,153 lbs)</span></div>
+                    <div class="spec-item"><span>Production Limit</span><span>106 Exclusive Units</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BUGATTI -->
+    <section class="content-section" id="sec-bugatti">
+        <h2 class="section-title">Bugatti Extreme Track Hyper-Weapon</h2>
+        <div class="model-block">
+            <div class="model-image-container" style="background-image: url('https://iili.io/n3JII7S.jpg');"><div class="model-image-overlay"></div></div>
+            <div class="model-content-padding">
+                <h3 class="model-title">Bugatti Bolide</h3>
+                <p class="model-desc">The most extreme, uncompromising lightweight track concept built around the quad-turbo W16 engine.</p>
+                
+                <div class="grid-heading">Core Performance Metrics</div>
+                <div class="metrics-grid">
+                    <div class="metric-card"><h3>1,825 HP</h3><p>Output on 110 Octane</p></div>
+                    <div class="metric-card"><h3>2.17S</h3><p>0-60 MPH</p></div>
+                    <div class="metric-card"><h3>310+ MPH</h3><p>Simulated Top Speed</p></div>
+                    <div class="metric-card"><h3>3:07.1</h3><p>Le Mans Simulation Lap</p></div>
+                </div>
+
+                <div class="grid-heading">Technical Specifications</div>
+                <div class="specs-grid">
+                    <div class="spec-item"><span>Engine Layout</span><span>8.0L Quad-Turbocharged W16</span></div>
+                    <div class="spec-item"><span>Transmission</span><span>7-Speed Track-Tuned DCT</span></div>
+                    <div class="spec-item"><span>Chassis</span><span>Advanced Aerospace Carbon Monocoque</span></div>
+                    <div class="spec-item"><span>Dry Weight</span><span>1,240 kg (2,733 lbs)</span></div>
+                    <div class="spec-item"><span>Power-to-Weight</span><span>0.68 kg per HP Ratio</span></div>
+                    <div class="spec-item"><span>Max Downforce</span><span>3,000 kg at Top Speed</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SUPRA -->
+    <section class="content-section" id="sec-supra">
+        <h2 class="section-title">Toyota Iconic Sports Car Legend</h2>
+        <div class="model-block">
+            <div class="model-image-container" style="background-image: url('https://iili.io/n3z5H9p.jpg');"><div class="model-image-overlay"></div></div>
+            <div class="model-content-padding">
+                <h3 class="model-title">Supra</h3>
+                <p class="model-desc">Driven by a legendary inline-six powerhouse, razor-sharp rear-wheel-drive tracking, and an unmistakable deep exhaust burble.</p>
+                
+                <div class="grid-heading">Core Performance Metrics</div>
+                <div class="metrics-grid">
+                    <div class="metric-card"><h3>382 HP</h3><p>Turbocharged Power</p></div>
+                    <div class="metric-card"><h3>3.9S</h3><p>0-60 MPH</p></div>
+                    <div class="metric-card"><h3>155 MPH</h3><p>Top Speed (Limited)</p></div>
+                    <div class="metric-card"><h3>12.3S</h3><p>1/4 Mile Time</p></div>
+                </div>
+
+                <div class="grid-heading">Technical Specifications</div>
+                <div class="specs-grid">
+                    <div class="spec-item"><span>Engine Layout</span><span>3.0L Twin-Scroll Turbo Inline-6 (B58)</span></div>
+                    <div class="spec-item"><span>Exhaust Note</span><span>Legendary Deep Tuning Exhaust &amp; Overrun</span></div>
+                    <div class="spec-item"><span>Transmission</span><span>6-Speed iMT Manual / 8-Speed Auto</span></div>
+                    <div class="spec-item"><span>Drivetrain</span><span>Front-Engine, Rear-Wheel Drive (RWD)</span></div>
+                    <div class="spec-item"><span>Suspension</span><span>Adaptive Variable Sport Suspension</span></div>
+                    <div class="spec-item"><span>Braking System</span><span>Brembo 4-Piston Fixed Calipers</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PORSCHE -->
+    <section class="content-section" id="sec-porsche">
+        <h2 class="section-title">Porsche Holy Trinity Hybrid Hypercar</h2>
+        <div class="model-block">
+            <div class="model-image-container" style="background-image: url('https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=1600&q=80');"><div class="model-image-overlay"></div></div>
+            <div class="model-content-padding">
+                <h3 class="model-title">Porsche 918 Spyder</h3>
+                <p class="model-desc">One-third of the legendary 'Holy Trinity' hypercar group, featuring dual electric motors paired with a roaring naturally-aspirated V8.</p>
+                
+                <div class="grid-heading">Core Performance Metrics</div>
+                <div class="metrics-grid">
+                    <div class="metric-card"><h3>887 HP</h3><p>Combined Output</p></div>
+                    <div class="metric-card"><h3>2.2S</h3><p>0-60 MPH</p></div>
+                    <div class="metric-card"><h3>214 MPH</h3><p>Top Speed</p></div>
+                    <div class="metric-card"><h3>9.8S</h3><p>1/4 Mile Time</p></div>
+                </div>
+
+                <div class="grid-heading">Technical Specifications</div>
+                <div class="specs-grid">
+                    <div class="spec-item"><span>Engine Layout</span><span>4.6L Naturally Aspirated V8 + 2 Motors</span></div>
+                    <div class="spec-item"><span>Transmission</span><span>7-Speed PDK Dual-Clutch</span></div>
+                    <div class="spec-item"><span>Battery Pack</span><span>6.8 kWh Liquid-Cooled Lithium-ion</span></div>
+                    <div class="spec-item"><span>Chassis</span><span>Carbon Fiber Reinforced Plastic (CFRP)</span></div>
+                    <div class="spec-item"><span>Curb Weight</span><span>1,634 kg (3,602 lbs)</span></div>
+                    <div class="spec-item"><span>Nurburgring Time</span><span>6:57.00 Minutes Record</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BMW V8 HYBRID -->
+    <section class="content-section" id="sec-bmw-hybrid">
+        <h2 class="section-title">BMW M Hybrid V8 Prototype &amp; Performance</h2>
+        <div class="model-block">
+            <div class="model-image-container" style="background-image: url('https://iili.io/n3xboXa.jpg');"><div class="model-image-overlay"></div></div>
+            <div class="model-content-padding">
+                <h3 class="model-title">BMW M Hybrid V8 LMDh</h3>
+                <p class="model-desc">BMW's cutting-edge endurance racer combining a twin-turbocharged V8 engine with standardized hybrid electrification components to conquer global circuits like Le Mans.</p>
+                
+                <div class="grid-heading">Core Performance Metrics</div>
+                <div class="metrics-grid">
+                    <div class="metric-card"><h3>640 HP</h3><p>Combined Output (LMDh)</p></div>
+                    <div class="metric-card"><h3>2.9S</h3><p>0-60 MPH Launch</p></div>
+                    <div class="metric-card"><h3>205+ MPH</h3><p>Top Speed</p></div>
+                    <div class="metric-card"><h3>9.6S</h3><p>1/4 Mile Time</p></div>
+                </div>
+
+                <div class="grid-heading">Technical Specifications</div>
+                <div class="specs-grid">
+                    <div class="spec-item"><span>Engine Layout</span><span>4.0L Twin-Turbocharged P66/3 V8</span></div>
+                    <div class="spec-item"><span>Hybrid Components</span><span>Bosch Motor, Williams Battery, Xpert Inverter</span></div>
+                    <div class="spec-item"><span>Transmission</span><span>Xtrac 7-Speed Sequential Paddle-Shift</span></div>
+                    <div class="spec-item"><span>Chassis</span><span>Dallara Carbon Fiber LMP2 Monocoque</span></div>
+                    <div class="spec-item"><span>Minimum Weight</span><span>1,030 kg (Regulations Spec)</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MERCEDES F1 V12 HYBRID -->
+    <section class="content-section" id="sec-mercedes-hybrid">
+        <h2 class="section-title">Mercedes-AMG Formula 1 Hybrid Weapon</h2>
+        <div class="model-block">
+            <div class="model-image-container" style="background-image: url('https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1600&q=80');"><div class="model-image-overlay"></div></div>
+            <div class="model-content-padding">
+                <h3 class="model-title">Mercedes-AMG One (F1 V12-Tier Hybrid)</h3>
+                <p class="model-desc">The absolute pinnacle of automotive engineering, integrating a literal Formula 1 championship-winning hybrid powertrain with multi-motor responsiveness.</p>
+                
+                <div class="grid-heading">Core Performance Metrics</div>
+                <div class="metrics-grid">
+                    <div class="metric-card"><h3>1,049 HP</h3><p>Combined Output</p></div>
+                    <div class="metric-card"><h3>2.9S</h3><p>0-60 MPH</p></div>
+                    <div class="metric-card"><h3>219 MPH</h3><p>Top Speed</p></div>
+                    <div class="metric-card"><h3>7.0S</h3><p>0-124 MPH (200 km/h)</p></div>
+                </div>
+
+                <div class="grid-heading">Technical Specifications</div>
+                <div class="specs-grid">
+                    <div class="spec-item"><span>Engine Layout</span><span>1.6L Turbo V6 F1 + 4 Electric Motors</span></div>
+                    <div class="spec-item"><span>Transmission</span><span>Automated 7-Speed Manual Clutched</span></div>
+                    <div class="spec-item"><span>Battery Pack</span><span>F1-Grade Liquid-Cooled 800V Lithium-ion</span></div>
+                    <div class="spec-item"><span>Aerodynamics</span><span>Active Multi-Stage DRS Rear Wing</span></div>
+                    <div class="spec-item"><span>Curb Weight</span><span>1,695 kg (3,737 lbs)</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Ultimate Hypercar Archive (2000–Present). All Rights Reserved.</p>
+        <p>Founders: <span>Enrique Tirkey</span> &amp; <span>Debdwij Sarkar</span> | Co-Founders: <span>Saket Roy</span> &amp; <span>Samrat Mukherjee</span></p>
+    </footer>
+
+    <script>
+        const brandData = {
+            ferrari: {
+                title: "FERRARI LEGACY",
+                tagline: "SCUDERIA <span>FERRARI ARCHIVE</span>",
+                subtitle: "THE ULTIMATE FLAGSHIP MODELS &amp; FASTEST WEAPONS",
+                bg: "https://iili.io/n3Jzpqv.jpg"
+            },
+            nissan: {
+                title: "NISSAN GT-R GODZILLA",
+                tagline: "NISSAN <span>JDM TUNER ARCHIVE</span>",
+                subtitle: "CUSTOM WIDEBODY TWIN-TURBO V6 MONSTER",
+                bg: "https://iili.io/n3Jztzg.jpg"
+            },
+            lamborghini: {
+                title: "LAMBORGHINI REVUELTO",
+                tagline: "LAMBORGHINI <span>SANT'AGATA ARCHIVE</span>",
+                subtitle: "ITALIAN V12 RAMPAGE &amp; HYBRID POWER",
+                bg: "https://iili.io/n3JI2et.jpg"
+            },
+            mclaren: {
+                title: "MCLAREN SPEEDTAIL",
+                tagline: "MCLAREN <span>AUTOMOTIVE ARCHIVE</span>",
+                subtitle: "TRACK &amp; ROAD VELOCITY INNOVATION",
+                bg: "https://iili.io/n3JzUsj.jpg"
+            },
+            bugatti: {
+                title: "BUGATTI BOLIDE TRACK WEAPON",
+                tagline: "BUGATTI <span>AUTOMOBILES ARCHIVE</span>",
+                subtitle: "THE EXTREME 1,825 HP W16 TRACK MONSTER",
+                bg: "https://iili.io/n3JII7S.jpg"
+            },
+            supra: {
+                title: "SUPRA",
+                tagline: "TOYOTA GAZOO <span>RACING SPORTS CARS</span>",
+                subtitle: "THE ICONIC TURBOCHARGED INLINE-6 REAR-WHEEL LEGEND",
+                bg: "https://iili.io/n3z5H9p.jpg"
+            },
+            porsche: {
+                title: "PORSCHE 918 SPYDER",
+                tagline: "PORSCHE <span>STUTTGART HYPERCAR ARCHIVE</span>",
+                subtitle: "THE LEGENDARY PLUG-IN V8 HYBRID WEAPON",
+                bg: "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=1600&q=80"
+            },
+            'bmw-hybrid': {
+                title: "BMW M HYBRID V8",
+                tagline: "BMW M <span>MOTORSPORT ARCHIVE</span>",
+                subtitle: "ENDURANCE PROTOTYPE V8 HYBRID POWER",
+                bg: "https://iili.io/n3xboXa.jpg"
+            },
+            'mercedes-hybrid': {
+                title: "MERCEDES-AMG F1 HYBRID",
+                tagline: "MERCEDES-AMG <span>F1 HYPERCAR ARCHIVE</span>",
+                subtitle: "FORMULA 1 CHAMPIONSHIP TECH FOR THE ROAD",
+                bg: "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1600&q=80"
+            }
+        };
+
+        function switchBrand(brandKey, event) {
+            document.querySelectorAll('.brand-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById('sec-' + brandKey).classList.add('active');
+
+            const data = brandData[brandKey];
+            const hero = document.getElementById('hero-bg');
+            
+            hero.style.backgroundImage = `url('${data.bg}')`;
+            document.getElementById('hero-tagline').innerHTML = data.tagline;
+            document.getElementById('hero-subtitle').innerHTML = data.subtitle;
+            document.getElementById('hero-title').innerText = data.title;
+        }
+    </script>
+</body>
+</html>
